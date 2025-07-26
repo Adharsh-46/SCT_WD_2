@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+ <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stopwatch</title>
+<style>
+* {
+margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ body {
+width: 100%;
+ height: 100vh;
+background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3374&q=80');
+background-position: center;
+background-size: cover;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+color: #f8f8f8;
+ }
+.container {
+padding: 1rem;
+max-width: 320px;
+text-align: center; border-radius: 10px;
+background-color: rgba(0, 0, 0, 0.6);
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+}
+ .time {
+ padding: 1rem 0;
+font-size: 2rem;
+} button {
+padding: 0.4rem 1rem;
+margin: 0.2rem;
+border-radius: 10px;
+border: 1px solid #f8f8f8;
+color: #f8f8f8;
+cursor: pointer;
+transition: background-color 0.2s;
+ }
+button:hover {
+background-color: rgba(255, 255, 255, 0.1); }
+ul.laps {
+margin-top: 1rem;
+padding: 0;
+list-style-type: none;
+max-height: 200px;
+ overflow-y: auto;
+}
+.lap-item {
+padding: 0.5rem;
+ background: #f8f8f8;  color: #111;
+border-radius: 5px;
+margin-bottom: 0.5rem;
+display: flex; justify-content: space-between;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Stopwatch</h1>
+<p class="time">
+<span id="minutes">00</span>:<span id="seconds">00</span>:<span id="tens">00</span>
+</p>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="reset">Reset</button>
+<button id="lap">Lap</button>
+<button id="clear-laps">Clear Laps</button>
+<ul class="laps" id="laps"></ul>
+</div>
+<script>
+let minutes = 0, seconds = 0, tens = 0;
+let Interval;
+let isRunning = false;
+
+const appendMinutes = document.getElementById("minutes");
+const appendSeconds = document.getElementById("seconds");
+const startBtn = document.getElementById("start");
+const stopBtn = document.getElementById("stop");
+const resetBtn = document.getElementById("reset");
+const lapBtn = document.getElementById("lap");
+const clearLapsBtn = document.getElementById("clear-laps");
+const lapsList = document.getElementById("laps");
+function pad(value) {
+return value < 10 ? "0" + value : value;
+}
+
+function updateDisplay() {
+appendMinutes.textContent = pad(minutes);
+appendSeconds.textContent = pad(seconds);
+appendTens.textContent = pad(tens);
+ }
+function startTimer() {
+tens++;
+if (tens > 99) {
+seconds++;
+tens = 0;
+}
+if (seconds > 59) {
+minutes++;
+seconds = 0;
+}
+updateDisplay();
+}
+startBtn.onclick = () => {
+if (!isRunning) {
+clearInterval(Interval);Interval = setInterval(startTimer, 10);
+isRunning = true;
+}  };
+stopBtn.onclick = () => {
+clearInterval(Interval);
+isRunning = false; };
+resetBtn.onclick = () => { clearInterval(Interval);
+minutes = seconds = tens = 0; updateDisplay();
+isRunning = false;
+lapsList.innerHTML = "";};
+lapBtn.onclick = () => {
+if (isRunning) { const lapTime = `${pad(minutes)}:${pad(seconds)}:${pad(tens)}`;
+const li = document.createElement("li");
+li.className = "lap-item";li.innerHTML = `<span>Lap</span><span>${lapTime}</span>`;
+lapsList.appendChild(li);
+}
+};
+clearLapsBtn.onclick = () => {
+      lapsList.innerHTML = "";
+    };
+</script>
+</body>
+</html>
